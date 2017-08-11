@@ -29,11 +29,11 @@
 				<td><strong>Hardpoints</strong></td>
 				<td width="50" align="center">&nbsp;</td>
 				<td width="100">&nbsp;</td>
-				<td>&nbsp;</td>
+				<td><strong>System</strong></td>
 			</tr>
 			<tr>
-				<td><input type="button" value="SHIELDS" onclick="Game.shieldSystem.toggle();"></td>
-				<td width="50" align="center"><div id="divShieldsStatus">OFF</div></td>
+				<td><input type="button" value="SHIELDS" onclick="Game.energy = Game.shieldSystem.toggle(Game.energy);"></td>
+				<td width="100" align="center"><div id="divShieldsStatus">OFF</div></td>
 				<td width="100"><img id="imgShieldsBar" height="10" width="0"></td>
 				<td><input type="button" id="cmdHardpoint1" value="HARDPOINT A" onclick=""></td>
 				<td width="50" align="center"><div id="divHardpointStatus1">OFF</div></td>
@@ -41,8 +41,8 @@
 				<td><div id="divHardPoint1"></div></td>
 			</tr>
 			<tr>
-				<td><input type="button" value="DRIVE" onclick="Game.driveSystem.toggle();"></td>
-				<td width="50" align="center"><div id="divDriveStatus">OFF</div></td>
+				<td><input type="button" value="DRIVE" onclick="Game.energy = Game.driveSystem.toggle(Game.energy);"></td>
+				<td width="100" align="center"><div id="divDriveStatus">OFF</div></td>
 				<td width="100"><img id="imgDriveBar" height="10" width="0"></td>
 				<td><input type="button" id="cmdHardpoint2" value="HARDPOINT B" onclick=""></td>
 				<td width="50" align="center"><div id="divHardpointStatus2">OFF</div></td>
@@ -50,8 +50,8 @@
 				<td><div id="divHardPoint2"></div></td>
 			</tr>
 			<tr>
-				<td><input type="button" value="DOCKING" onclick="Game.dockingSystem.toggle();"></td>
-				<td width="50" align="center"><div id="divDockingStatus">OFF</div></td>
+				<td><input type="button" value="DOCKING" onclick="Game.energy = Game.dockingSystem.toggle(Game.energy);"></td>
+				<td width="100" align="center"><div id="divDockingStatus">OFF</div></td>
 				<td width="100"><img id="imgDockingBar" height="10" width="0"></td>
 				<td><input type="button" id="cmdHardpoint3" value="HARDPOINT C" onclick=""></td>
 				<td width="50" align="center"><div id="divHardpointStatus3">OFF</div></td>

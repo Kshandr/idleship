@@ -17,7 +17,7 @@ function Game()
 	var cargoList = initialiseCargoList();
 
 	//Properties
-	this.energy = 0; // Set energy to 1000 for testing purposes.
+	this.energy = 1000; // Set energy to 1000 for testing purposes.
 	this.cursorCount = 1;
 	this.cursorCost = STARTINGCURSORCOST;
 	this.cronVariable = 0;
@@ -425,9 +425,24 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 	this.status = false;
 	this.enabled = enabled;
 	this.barElement = barElement;
+	this.broken = true;
 	
-	this.toggle = function() {
-		this.status = !this.status;
+	this.toggle = function(energy) 
+	{
+		
+		if(!this.broken)
+		{
+			this.status = !this.status;
+		}
+		else
+		{
+			if(confirm("Pay 400 to fix?"))
+			{
+				energy = energy - 400;
+				this.broken = false;
+			}
+		}
+		
 		document.getElementById(statusElement).innerText = prettyPrintBool(this.status);
 		
 		if(zeroIfUnpowered)	
@@ -435,6 +450,8 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 			this.systemPointsCurrent = 0;
 			this.displayBar();
 		}
+		
+		return energy;
 	}
 	
 	this.tick = function(energy) {
@@ -477,6 +494,15 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 			
 		document.getElementById(barElement).width = percentFull;
 		document.getElementById(barElement).src = colorBar;
+		
+		if(!this.broken)
+		{
+			document.getElementById(statusElement).innerText = prettyPrintBool(this.status) + "(" + percentFull +"%)";
+		}
+		else
+		{
+			document.getElementById(statusElement).innerText = "BROKEN";
+		}
 	}
 }
 	
