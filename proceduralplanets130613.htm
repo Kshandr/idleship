@@ -1,0 +1,330 @@
+﻿<html>
+<head>
+<title></title>
+<script>
+// Utility Classes - Might replace with jquery later...
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function getMousePos(canvas, evt) 
+{
+	var rect = canvas.getBoundingClientRect();
+	return { x: evt.clientX - rect.left, y: evt.clientY - rect.top};
+}
+
+function getScriptURL() 
+{
+    var scripts = document.getElementsByTagName('script');
+    var index = scripts.length - 1;
+    var myScript = scripts[index];
+    
+    return myScript.src;
+}
+
+function makeStockMarket(randomNumber)
+{
+
+}
+
+function makePlanetFlavour(randomNumber, systemName)
+{
+	var x =  Math.sin(randomNumber);
+
+    var x = x.toString();
+	
+	var races = ["Humans","Krayce","Tarn","Teth","Eyclasa","Irif","humanoid life forms","Anfar","Girrians","insectoid life forms"];
+	var artifactOwners = ["the Seeders","the Builders","an unknown, ancient race"];
+	var descriptor = ["arid","damp","humid","desert","jungle","frozen","savannah","rocky","underwater","forest"];
+	var systemTypes = ["red giant","yellow star","blue star","white dwarf","brown dwarf"];
+
+	if(randomNumber%2==0)
+	{
+		var flavourText = "The " + systemName + " system consists of " +
+							parseInt(Math.floor(parseInt(x.substring(3,4))/2)+1) + " planets, orbitting a " +
+							systemTypes[parseInt(Math.floor(x.substring(4,5))/2)] + ". " +
+							"The system's most inhabited planet is " + descriptor[parseInt(x.substring(5,6))] + ", " +
+							"and is mostly inhabited by " + races[parseInt(x.substring(6,7))] + ".";
+	}
+	else if(randomNumber%2==1)
+	{
+		var flavourText = systemName + " is a  " + systemTypes[parseInt(Math.floor(x.substring(4,5))/2)] + " system, home to " +
+							Math.floor(parseInt(x.substring(3,4))) + " million " +
+							races[parseInt(x.substring(6,7))] + ".";
+							
+	}
+
+	var planetColor = parseInt(Math.floor(x.substring(4,5))/2);
+	
+	return [flavourText, planetColor];
+}
+
+function placeSystem(randomNumber)
+{
+	var x = (randomNumber % 4) + 1;
+	var i = 0;
+	var j = 0;
+
+	if(x==0) 
+	{
+		i = 200; j = 200;
+	}
+	else if(x==1) 
+	{
+		i = 200; j = 0;
+	}
+	else if(x==2) 
+	{
+ 		i=0; j=200;
+	}
+	else if(x==3)
+	{
+ 		i = 0; j = 0;
+	}
+
+	i = i + Math.floor(parseInt(Math.sin(randomNumber).toString().substring(6,9))/2);
+	j = j + Math.floor(parseInt(Math.cos(randomNumber).toString().substring(6,9))/2);
+ 
+	while(i > 400)
+ 		i = i - randomNumber;
+
+	if(i<0) i = randomNumber;
+ 
+ 	while(j > 400)
+		j = j - randomNumber;
+ 
+	if(j<0) j=randomNumber;
+ 
+ 	return [i,j];
+}
+
+function nameSystem(randomNumber)
+{
+	var myName = "";
+	var startSyllables = ["ro","ta","har","xy","yin","fi","la","di","pi","or","yr","ha","qua","ra","tch","f","b","s"];
+	var middleSyllables = ["o","i","a","u","o","ja","ma","bu","qua","el","re","qi"];
+	var middleSyllablesB = ["ud","um","ig","il","es","is","ay"];
+	var endSyllables = ["th","es","sc","k","na","dy","ug","ten","w","s","rag","rn","ts",
+							"o","sch","fil","dja","kil","hop","tep"];
+	
+		var x = (randomNumber % 6) + 1;
+
+		if(x==1)
+		{
+			randomNumber = randomNumber + Math.floor(Math.sin(randomNumber));
+ 			myName = startSyllables[Math.floor(randomNumber % startSyllables.length)] +
+   						endSyllables[Math.floor(randomNumber % endSyllables.length)]; 
+		}
+		else if(x==2)
+		{
+			randomNumber = randomNumber + Math.floor(Math.sqrt(randomNumber));
+ 			myName = startSyllables[Math.floor(randomNumber % startSyllables.length)] +
+   						middleSyllables[Math.floor(randomNumber % middleSyllables.length)] +
+   						endSyllables[Math.floor(randomNumber % endSyllables.length)];
+		}
+		else if(x==3)
+		{
+			randomNumber = randomNumber + Math.floor(Math.cos(randomNumber));
+ 			myName = startSyllables[Math.floor(randomNumber % startSyllables.length)] +
+   						middleSyllables[Math.floor(randomNumber % middleSyllables.length)] +
+   						middleSyllablesB[Math.floor((randomNumber+1) % middleSyllablesB.length)] +
+   						endSyllables[Math.floor((randomNumber+2) % endSyllables.length)];
+		}
+		else if(x==4)
+		{
+			randomNumber = randomNumber + Math.floor(Math.cos(randomNumber));
+ 			myName = startSyllables[Math.floor(randomNumber % startSyllables.length)] +
+   						middleSyllables[Math.floor(randomNumber % middleSyllables.length)] +
+   						middleSyllables[Math.floor((randomNumber+2) % middleSyllables.length)] +
+   						middleSyllables[Math.floor((randomNumber+4) % middleSyllables.length)] +
+   						endSyllables[Math.floor((randomNumber+6) % endSyllables.length)];
+		}
+		else if(x==5)
+		{
+			randomNumber = randomNumber + Math.floor(Math.sin(randomNumber));
+ 			myName = startSyllables[Math.floor(randomNumber % startSyllables.length)] +
+   						middleSyllablesB[Math.floor(randomNumber % middleSyllablesB.length)] +
+   						middleSyllablesB[Math.floor((randomNumber+2) % middleSyllablesB.length)] +
+   						endSyllables[Math.floor((randomNumber+6) % endSyllables.length)];
+		}
+ 		else if(x==6)
+		{
+			randomNumber = randomNumber + Math.floor(Math.sqrt(randomNumber));
+ 			myName = startSyllables[Math.floor(randomNumber % startSyllables.length)] +
+   						middleSyllablesB[Math.floor(randomNumber % middleSyllablesB.length)] +
+   						endSyllables[Math.floor(randomNumber % endSyllables.length)];
+		}
+		
+ 	myName = myName.substring(0,1).toUpperCase() + myName.substring(1,myName.length);
+ 
+ 	return myName;
+}
+
+function getManySystemNames(target)
+{
+	var arr = [];
+     
+	var placed = 0;
+	var found = 0;
+	var tempName = "";
+	
+	for(i = 0;i<10000;i++)
+	{
+		tempName = nameSystem(i);
+			
+		for(j = 0;j<placed;j++)
+		{
+			if(arr[j]==tempName)
+			{
+				found = 1;				
+				break;
+			}
+		}
+		
+		if(found == 0)
+		{
+			arr[placed] = tempName;
+			placed++;
+		}
+		
+		found = 0;
+		
+		if(placed==target)
+			break;
+	}
+
+	return arr;
+}
+
+// Object stuff
+function starSystem(name, xpos, ypos)
+{
+	this.Name = name;
+	this.XPos = xpos;
+	this.YPos = ypos;
+}	
+</script>
+</head>
+<body>
+ 
+<canvas id="myCanvas" width="400" height="400" border="1"></canvas>
+&nbsp;&nbsp;
+<canvas id="localCanvas" width="400" height="400"></canvas>
+<script>
+
+	// Number of planets
+	var planets = 1500;
+	
+	var planetNameArray = getManySystemNames(planets);
+	var currentPlanet = parseInt(getParameterByName("id"));
+	
+	// Local Map
+	var localCanvas = document.getElementById("localCanvas");
+	var localCanvasWidth = localCanvas.width;
+	var localCanvasHeight = localCanvas.height;
+	var localCtx = localCanvas.getContext("2d");
+
+	localCtx.fillStyle = "#AAAAAA";
+	localCtx.beginPath();
+	localCtx.rect(0,0,400,400);
+	localCtx.fill();
+			
+	localCtx.fillStyle = "#000000";
+	localCtx.beginPath();
+	localCtx.arc(200,200,200,0,2*Math.PI);
+	localCtx.fill();
+	
+	var localPlanets = [];
+	var planetCount = 0;
+	
+	for(i=0;i<planets;i++)
+	{
+		var distanceFromCurrent = Math.sqrt(Math.abs(placeSystem(currentPlanet)[0] - placeSystem(i)[0]) +
+									Math.abs(placeSystem(currentPlanet)[1] - placeSystem(i)[1]));
+									
+		if(distanceFromCurrent<=5)
+		{
+			var plotX =  (placeSystem(i)[0]*10) - (placeSystem(currentPlanet)[0]*10) + 200;
+			var plotY =  (placeSystem(i)[1]*10) - (placeSystem(currentPlanet)[1]*10) + 200;
+			
+			localCtx.fillStyle = "#FFFFFF";
+			localCtx.beginPath();
+			localCtx.arc(plotX, plotY, 4, 0, 2 * Math.PI);
+			localCtx.fill();
+
+			localCtx.fillStyle = "#00FFFF";
+			localCtx.font="10px Arial";
+			localCtx.fillText(planetNameArray[i], (plotX - ((planetNameArray[i].length * 10)/4)),
+													(plotY + 15));
+													
+			localPlanets[planetCount] = [parseInt(plotX),parseInt(plotY),parseInt(i)];
+			planetCount++;
+		}							
+	}
+	
+	// Overall Star Map
+	var canvas = document.getElementById("myCanvas");
+	var canvasWidth = canvas.width;
+	var canvasHeight = canvas.height;
+	var ctx = canvas.getContext("2d");
+
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(0,0,400,400);	
+
+	var canvasData = ctx.getImageData(0,0,canvasWidth,canvasHeight);
+
+ 	document.write("<br><br>\n");
+
+	for(i=1;i<planets;i++)
+	{
+//		document.write(i + ": " + planetNameArray[i] +  "(" + placeSystem(i)[0] + "," + placeSystem(i)[1] + ")<br>\n");
+//		document.write(makePlanetFlavour(i,planetNameArray[i])[0] + "<br>\n");
+		
+		index = (placeSystem(i)[0] + placeSystem(i)[1] * canvasWidth) * 4;
+
+		if(i==currentPlanet)
+		{
+			canvasData.data[index+0]=255; // r
+	  		canvasData.data[index+1]=255; // g
+	  		canvasData.data[index+2]=255; // b
+	  		canvasData.data[index+3]=255; // a
+	  	}
+	  	else
+	  	{
+			canvasData.data[index+0]=255; // r
+	  		canvasData.data[index+1]=0; // g
+	  		canvasData.data[index+2]=0; // b
+	  		canvasData.data[index+3]=255; // a
+	  	}
+	}
+ 
+	ctx.putImageData(canvasData,0,0);
+	
+	document.write("<font name=\"Arial\" size=\"2\">\n");
+	document.write("<strong>" + makePlanetFlavour(currentPlanet	,planetNameArray[currentPlanet])[0] + "</strong><br>\n");
+	
+	localCanvas.addEventListener('click', function(evt) 
+	{
+        var mousePos = getMousePos(localCanvas, evt);
+
+		for(i=0;i<planetCount;i++)
+       	{
+       		if(((mousePos.x > localPlanets[i][0]-5) && (mousePos.x < localPlanets[i][0]+5)) &&
+				((mousePos.y > localPlanets[i][1]-5) && (mousePos.y < localPlanets[i][1]+5)))
+			{				
+       			var myUrl = document.URL;
+       			
+       			window.location.href = myUrl.substring(0,myUrl.lastIndexOf("=")+1) + localPlanets[i][2];
+       		}
+       	}
+    }, 
+    false);
+    
+ </script>
+</body>
+</html>
+

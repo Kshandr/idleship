@@ -1,0 +1,130 @@
+<html>
+	<head>
+		<title></title>
+		<script src="scripts/idleship.js"></script>		
+	</head>
+	<body bgcolor="#999999">
+		<table>
+			<tr>
+				<td>Energy</td>
+				<td><div id="divEnergyLevel"></div></td>
+			</tr>
+			<tr>
+				<td>Upgrades</td>
+				<td><div id="divCursors"></div></td>
+			</tr>
+			<tr>
+				<td>Credits</td>
+				<td><div id="divCredits"></div></td>
+			</tr>
+		</table>
+		<script>
+			var Game = new Game();			
+		</script>
+		<table border="0">
+			<tr>
+				<td><strong>Systems</strong></td>
+				<td width="50" align="center">&nbsp;</td>
+				<td width="100">&nbsp;</td>
+				<td><strong>Hardpoints</strong></td>
+				<td width="50" align="center">&nbsp;</td>
+				<td width="100">&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td><input type="button" value="SHIELDS" onclick="Game.shieldSystem.toggle();"></td>
+				<td width="50" align="center"><div id="divShieldsStatus">OFF</div></td>
+				<td width="100"><img id="imgShieldsBar" height="10" width="0"></td>
+				<td><input type="button" id="cmdHardpoint1" value="HARDPOINT A" onclick=""></td>
+				<td width="50" align="center"><div id="divHardpointStatus1">OFF</div></td>
+				<td width="100"><img id="imgHardpointBar1" height="10" width="0"></td>
+				<td><div id="divHardPoint1"></div></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="DRIVE" onclick="Game.driveSystem.toggle();"></td>
+				<td width="50" align="center"><div id="divDriveStatus">OFF</div></td>
+				<td width="100"><img id="imgDriveBar" height="10" width="0"></td>
+				<td><input type="button" id="cmdHardpoint2" value="HARDPOINT B" onclick=""></td>
+				<td width="50" align="center"><div id="divHardpointStatus2">OFF</div></td>
+				<td width="100"><img id="imgHardpointBar2" height="10" width="0"></td>
+				<td><div id="divHardPoint2"></div></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="DOCKING" onclick="Game.dockingSystem.toggle();"></td>
+				<td width="50" align="center"><div id="divDockingStatus">OFF</div></td>
+				<td width="100"><img id="imgDockingBar" height="10" width="0"></td>
+				<td><input type="button" id="cmdHardpoint3" value="HARDPOINT C" onclick=""></td>
+				<td width="50" align="center"><div id="divHardpointStatus3">OFF</div></td>
+				<td width="100"><img id="imgHardpointBar3" height="10" width="0"></td>
+				<td><div id="divHardPoint3"></div></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td width="50" align="center">&nbsp;</td>
+				<td width="100">&nbsp;</td>
+				<td><input type="button" id="cmdHardpoint4" value="HARDPOINT D" onclick=""></td>
+				<td width="50" align="center"><div id="divHardpointStatus4">OFF</div></td>
+				<td width="100"><img id="imgHardpointBar4" height="10" width="0"></td>
+				<td><div id="divHardPoint4"></div></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td width="50" align="center">&nbsp;</td>
+				<td width="100">&nbsp;</td>
+				<td><input type="button" id="cmdHardpoint5" value="HARDPOINT E" onclick=""></td>
+				<td width="50" align="center"><div id="divHardpointStatus5">OFF</div></td>
+				<td width="100"><img id="imgHardpointBar5" height="10" width="0"></td>
+				<td><div id="divHardPoint5"></div></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td width="50" align="center">&nbsp;</td>
+				<td width="100">&nbsp;</td>
+				<td><input type="button" id="cmdHardpoint6" value="HARDPOINT F" onclick=""></td>
+				<td width="50" align="center"><div id="divHardpointStatus6">OFF</div></td>
+				<td width="100"><img id="imgHardpointBar6" height="10" width="0"></td>
+				<td><div id="divHardPoint6"></div></td>
+			</tr>
+		</table>
+		<br/>
+		<input type="button" value="CRANK REACTOR" onclick="Game.handleClick();">
+		<input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade">
+		<input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);">
+		<input type="button" value="TEST" onclick="Game.displayMessages();">
+		
+		<br/><br/>
+		
+		<table border="0" width="100%">
+			<tr>
+				<td valign="top" width="50%">
+					<strong>Hyperdrive</strong>
+					<table>
+						<tr>
+							<td><canvas id="localCanvas" width="200" height="200"></canvas></td>
+							<td valign="top">
+								Current System : <div id="divCurrentSystem">Railten</div>
+								<br/>
+								Drive Destination : <div id="divDriveDest">Railten</div>
+								<br/>
+								<input type="button" value="JUMP" onclick="Game.handleJumpClick();">
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td valign="top" width="50%">
+					<strong>Messages</strong>
+					<br/>
+					<div id="messagebox"></div>
+				</td>
+			</tr>
+		</table>
+		
+		<script>
+			Game.drawDashboard();
+			Game.cron_start();
+			Game.drawLocalMap();
+			Game.installWeapons();
+			Game.drawWeapons();
+		</script>
+	</body>
+</html>
