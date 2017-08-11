@@ -77,7 +77,8 @@ function Game()
 	}
 	
 	this.drawLocalMap = function() {
-		this.localPlanetMap = displayLocalMap(this.planetNameArray, NUMBEROFSYSTEMS, currentSystemId);
+		if(Game.driveSystem.broken==false)	
+			this.localPlanetMap = displayLocalMap(this.planetNameArray, NUMBEROFSYSTEMS, currentSystemId);
 	}
 	
 	this.installWeapons = function() {
@@ -102,7 +103,7 @@ function Game()
 			{
 				document.getElementById("divHardPoint" + (i+1)).innerText = this.myShip.weapons[i].name;
 				document.getElementById("cmdHardpoint" + (i+1)).value = "HARDPOINT " + letters[i];
-				document.getElementById("cmdHardpoint" + (i+1)).onclick = new Function("Game.hardPoints[" + i + "].toggle()");
+				document.getElementById("cmdHardpoint" + (i+1)).onclick = new Function("Game.energy = Game.hardPoints[" + i + "].toggle(Game.energy);");
 			}
 			else
 			{
@@ -440,6 +441,7 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 			{
 				energy = energy - 400;
 				this.broken = false;
+				Game.drawLocalMap();
 			}
 		}
 		
