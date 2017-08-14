@@ -1,5 +1,23 @@
 function Game()
 {
+	// TODOs from mango...
+	/*
+	
+	
+
+		I mean adding a step. Buying some parts that you then need to work on a bit like not buying bolts but a bolt machine you know
+	
+		They could send messages in the beginning. Your worm can is no interest to us you pitiful fool
+	
+	*/
+	
+	// TODOs from me...
+	/*
+		I'm using plain js confirm and alert since 8/2017 here. It would be nicer to do that with jquery.
+		
+		How does pagination on messages work anyway? Textarea? Screen's getting a bit crowded now.
+	*/
+	
 	//Constants
 	var FRAMERATE = 20;
 	var DISPLAYBARMAXWIDTH = 100;
@@ -22,7 +40,7 @@ function Game()
 	this.cursorCost = STARTINGCURSORCOST;
 	this.cronVariable = 0;
 	this.creditCount = 0;
-	// this.status = "SPACE";
+	this.status = "SPACE";
 	
 	this.myShip = new ship(10,10,"Unknown","Cricket",1,1,2);
 	this.myShip.weapons[0] = new weapon("Laser",5,1,0,0,1,70,0,0);
@@ -58,7 +76,16 @@ function Game()
 		}
 	}
 	
-	this.displayMessages = function() {
+	this.displayMessage = function(msgNo)
+	{
+		var outStr = "From : " + this.myMessages[msgNo].sender + "\n\n" +
+						"Subject : " + this.myMessages[msgNo].subject + "\n\n" +
+						"Message : \n\n" + this.myMessages[msgNo].messagetext;
+		alert(outStr);
+	}
+	
+	this.displayMessages = function() 
+	{
 			var outStr = "<table border=\"1\">\n";
 			
 			outStr = outStr + "<tr><td><strong>From</strong></td><td><strong>Subject</strong></td></tr>\n";
@@ -67,7 +94,8 @@ function Game()
 			{
 				outStr = outStr + "<tr>\n";
 				outStr = outStr + "<td>" + this.myMessages[i].sender + "</td>\n";
-				outStr = outStr + "<td>" + this.myMessages[i].messagetext + "</td>\n";
+				outStr = outStr + "<td>" + this.myMessages[i].subject + "</td>\n";
+				outStr = outStr + "<td><input type=\"button\" value=\"Read\" onclick=\"Game.displayMessage(" + i + ");\"></td>\n";
 				outStr = outStr + "<tr>\n";
 			}
 			
@@ -76,12 +104,14 @@ function Game()
 			document.getElementById("messagebox").innerHTML=outStr;
 	}
 	
-	this.drawLocalMap = function() {
+	this.drawLocalMap = function() 
+	{
 		if(Game.driveSystem.broken==false)	
 			this.localPlanetMap = displayLocalMap(this.planetNameArray, NUMBEROFSYSTEMS, currentSystemId);
 	}
 	
-	this.installWeapons = function() {
+	this.installWeapons = function() 
+	{
 			Game.hardPoints = [];
 			
 			for(i=0;i < Game.myShip.weapons.length;i++)
@@ -94,7 +124,8 @@ function Game()
 			}
 	}
 	
-	this.drawWeapons = function() {
+	this.drawWeapons = function() 
+	{
 		letters = ['A','B','C','D','E','F'];
 		
 		for(i=0;i<Game.hardPoints.length;i++)
@@ -115,20 +146,37 @@ function Game()
 	}
 	
 	// Cron functions
-	this.cron_start = function() {
+	this.cron_start = function() 
+	{
 		this.cronVariable = setInterval(this.cron_tick,(1000/FRAMERATE));
 	}
 	
-	this.cron_stop = function() {
+	this.cron_stop = function() 
+	{
 		clearInterval(this.cronVariable);
 	}
 	
-	this.cron_tick = function() {
+	this.cron_tick = function() 
+	{
 		Game.handleFramedClick();
+		Game.handleEnemySpawns();
+		Game.handleCombat()
 	} 
 
+	// Handlers for combat
+	this.handleEnemySpawns = function()
+	{
+		
+	}
+	
+	this.handleCombat = function()
+	{
+		
+	}
+	
 	// Click Handlers
-	this.handleFramedClick = function() {		
+	this.handleFramedClick = function() 
+	{		
 		this.energy += (this.cursorCount / FRAMERATE);
 		
 		this.energy = this.shieldSystem.tick(this.energy);
@@ -146,12 +194,14 @@ function Game()
 		this.drawDashboard();
 	}
 	
-	this.handleClick = function() {
+	this.handleClick = function() 
+	{
 		this.energy++;
 		this.drawDashboard();
 	}
 	
-	this.buyUpgrade = function() {
+	this.buyUpgrade = function() 
+	{
 		if(this.energy >= this.cursorCost)
 		{
 			this.energy -= this.cursorCost;
@@ -162,7 +212,8 @@ function Game()
 		}
 	}
 	
-	this.buyCredit = function(amount) {
+	this.buyCredit = function(amount) 
+	{
 		if(this.energy >= (CREDITCOST * amount))
 		{
 			this.energy -= (CREDITCOST * amount);
@@ -218,9 +269,10 @@ function prettyPrintBool(boolVal) {
 // **********************************************************************************
 // Ship Entities
 
-function message(sender, messagetext) {
+function message(sender, subject, messagetext) {
 	
 	this.sender = sender;
+	this.subject = subject;
 	this.messagetext = messagetext;
 }
 
@@ -1050,7 +1102,9 @@ function initialiseWeaponsList() {
 
 function initialiseMessagesList() {
 	var messageList=[
-		new message("Nick","This\nis\nis\na\nmessage!")
+		new message("Nick","Message1", "This is a message!"),
+		new message("Nick","Message2", "This is a message!"),
+		new message("Nick","Message3", "This is a message!")
 	];
 	
 	return messageList;
