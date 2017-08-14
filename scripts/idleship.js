@@ -55,9 +55,7 @@ function Game()
 	this.currentSystem = new starsystem(currentSystemId, this.planetNameArray);
 	this.localPlanetMap = [];
 	
-	this.messageMasterList = initialiseMessagesList();
-	this.myMessages = [];
-	this.myMessages[0] = this.messageMasterList[0];
+	this.myMessages = initialiseMessagesList();
 	
 	
 	// UI functions
@@ -93,7 +91,7 @@ function Game()
 			for(i=0;i<this.myMessages.length;i++)
 			{
 				outStr = outStr + "<tr>\n";
-				outStr = outStr + "<td>" + this.myMessages[i].sender + "</td>\n";
+				outStr = outStr + "<td>" + this.myMessages[i].sender + " " + this.myMessages.length + "</td>\n";
 				outStr = outStr + "<td>" + this.myMessages[i].subject + "</td>\n";
 				outStr = outStr + "<td><input type=\"button\" value=\"Read\" onclick=\"Game.displayMessage(" + i + ");\"></td>\n";
 				outStr = outStr + "<tr>\n";
@@ -107,7 +105,10 @@ function Game()
 	this.drawLocalMap = function() 
 	{
 		if(Game.driveSystem.broken==false)	
+		{
 			this.localPlanetMap = displayLocalMap(this.planetNameArray, NUMBEROFSYSTEMS, currentSystemId);
+			document.getElementById("divCurrentSystem").innerText = Game.planetNameArray[currentSystemId];
+		}
 	}
 	
 	this.installWeapons = function() 
@@ -1002,7 +1003,8 @@ function stockline (pr,qu) {
 	this.quantity = qu;
 }
 
-function displayLocalMap(planetNameArray, numberOfSystems, currentPlanet) {
+function displayLocalMap(planetNameArray, numberOfSystems, currentPlanet) 
+{
 
 	//TODO - this is full of magic numbers. Can we not do something better with styles here?
 	
@@ -1054,7 +1056,7 @@ function displayLocalMap(planetNameArray, numberOfSystems, currentPlanet) {
 			planetCount++;
 		}						
 	}
-	
+
 	localCanvas.addEventListener('click', Game.handleLocalMapClick);
 
 	return localPlanets;
@@ -1064,7 +1066,8 @@ function displayLocalMap(planetNameArray, numberOfSystems, currentPlanet) {
 // **********************************************************************************
 // Initialisation Functions
 
-function initialiseCargoList() {
+function initialiseCargoList() 
+{
 	var cargoList = [{name:"Food", baseprice:10}, 
 				{name:"Furs", baseprice:30},
 				{name:"Metals", baseprice:150},
@@ -1084,7 +1087,8 @@ function initialiseCargoList() {
 	return cargoList;
 }
 
-function initialiseWeaponsList() {
+function initialiseWeaponsList() 
+{
 	// weaponName,damageMax,damageMin,usesAmmo,
 	// currentAmmo,cooldown,chanceToHit,
 	// chanceToPuncture, chanceToBurn
@@ -1100,11 +1104,17 @@ function initialiseWeaponsList() {
 	return weaponList;
 }
 
-function initialiseMessagesList() {
+function initialiseMessagesList() 
+{
+	// sender, subject, bodytext
 	var messageList=[
-		new message("Nick","Message1", "This is a message!"),
-		new message("Nick","Message2", "This is a message!"),
-		new message("Nick","Message3", "This is a message!")
+		new message("Qwerty","Confused? I Would Be", 
+						"So hi boss! I'm QWERTY - your shipboard computer. You may be experiencing some " +
+						"confusion right now because you've just woken up from cryosleep. There's been an " +
+						"accident and it's caused some cerebral degradation - in short you've lost your " +
+						"memory. We're going to need to work together in order to get you to safety. You " +
+						"should start by cranking the reactor - the ship needs energy to get it going and " +
+						"then we'll get on to fixing what's broke!")
 	];
 	
 	return messageList;

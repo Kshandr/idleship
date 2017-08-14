@@ -90,7 +90,6 @@
 		<input type="button" value="CRANK REACTOR" onclick="Game.handleClick();">
 		<input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade">
 		<input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);">
-		<input type="button" value="TEST" onclick="Game.displayMessages();">
 		
 		<br/><br/>
 		
@@ -102,9 +101,9 @@
 						<tr>
 							<td><canvas id="localCanvas" width="200" height="200"></canvas></td>
 							<td valign="top">
-								Current System : <div id="divCurrentSystem">Railten</div>
+								Current System : <div id="divCurrentSystem"></div>
 								<br/>
-								Drive Destination : <div id="divDriveDest">Railten</div>
+								Drive Destination : <div id="divDriveDest"></div>
 								<br/>
 								<input type="button" value="JUMP" onclick="Game.handleJumpClick();">
 							</td>
@@ -125,6 +124,7 @@
 			Game.drawLocalMap();
 			Game.installWeapons();
 			Game.drawWeapons();
+			Game.displayMessages();
 		</script>
 	</body>
 </html>
