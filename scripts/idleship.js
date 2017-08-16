@@ -58,6 +58,10 @@ function Game()
 	
 	this.myMessages = new Array();
 	
+	this.flashDelay = 10;
+	this.flashMessage = "";
+	this.flashesRemaining = 0;
+	this.flashDelayRemaining = this.flashDelay;
 	
 	// UI functions
 	this.drawDashboard = function() {
@@ -166,9 +170,42 @@ function Game()
 		Game.handleFramedClick();
 		Game.handleEnemySpawns();
 		Game.handleCombat();
+		Game.displayFlashMessage();
 		eventManager(Game);
 	} 
 
+	this.triggerFlashMessage = function(message, times)
+	{
+			this.flashesRemaining = times;
+			this.flashMessage = message;
+	}
+	
+	this.displayFlashMessage = function()
+	{
+		this.flashDelayRemaining--;
+		
+		if(this.flashDelayRemaining == 0)
+		{
+			if(((this.flashesRemaining % 2) == 1) && (this.flashesRemaining>=0))
+			{
+				document.getElementById("messageflashline").innerText = this.flashMessage;
+			}
+			else
+			{
+				document.getElementById("messageflashline").innerHTML = "&nbsp;";
+			}
+			
+			this.flashesRemaining--;
+			
+			if(this.flashesRemaining<=0)
+			{
+				document.getElementById("messageflashline").innerText = "Status Nominal...";	
+			}
+			
+			this.flashDelayRemaining = this.flashDelay;
+		}
+	}
+	
 	// Handlers for combat
 	this.handleEnemySpawns = function()
 	{

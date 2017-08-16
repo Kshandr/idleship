@@ -88,26 +88,30 @@
 			</tr>
 		</table>
 		<br/>
-		<input type="button" value="CRANK REACTOR" onclick="Game.handleClick();">
-		<input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade" style="display:none;">
-		<input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);" id="cmdBuyCredit" style="display:none;">
-		<input type="button" value="BYPASS STORY" onclick="Game.goalStatus=255; Game.energy=10000;">
-		
+		<table border="0">
+			<tr><td colspan="4"><div id="messageflashline">Status Nominal...</div></td></tr>
+			<tr>
+				<td><input type="button" value="CRANK REACTOR" onclick="Game.handleClick();"></td>
+				<td><input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade" style="display:none;"></td>
+				<td><input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);" id="cmdBuyCredit" style="display:none;"></td>
+				<td><input type="button" value="BYPASS STORY" onclick="Game.goalStatus=255; Game.energy=10000;"></td>
+			</tr>
+		</table>
 		<br/><br/>
 		
 		<table border="0" width="100%">
 			<tr>
 				<td valign="top" width="50%">
-					<strong>Hyperdrive</strong>
+					<div id="hyperdrivetitle"><strong>Hyperdrive - BROKEN</strong></div>
 					<table>
 						<tr>
 							<td><canvas id="localCanvas" width="200" height="200"></canvas></td>
 							<td valign="top">
-								Current System : <div id="divCurrentSystem"></div>
+								<div id="currentsystemtitle"></div> <div id="divCurrentSystem"></div>
 								<br/>
-								Drive Destination : <div id="divDriveDest"></div>
+								<div id="drivedestinationtitle"></div> <div id="divDriveDest"></div>
 								<br/>
-								<input type="button" value="JUMP" onclick="Game.handleJumpClick();">
+								<input type="button" value="JUMP" id="cmdJump" onclick="Game.handleJumpClick();" style="display:none">
 							</td>
 						</tr>
 					</table>

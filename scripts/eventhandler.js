@@ -15,6 +15,7 @@ function eventManager(gameRef)
 						"memory. We're going to need to work together in order to get you to safety. You " +
 						"should start by cranking the reactor - the ship needs energy to get it going and " +
 						"then we'll get on to fixing what's broke!"));
+		gameRef.triggerFlashMessage("You Have New Mail",10);
 		gameRef.displayMessages();
 		gameRef.goalStatus = gameRef.goalStatus + 1;
 	}
@@ -32,7 +33,8 @@ function eventManager(gameRef)
 						"other than sit here. Those repairs are going to cost you 400 energy each. Try " +
 						"fixing the shields first - this star system's fairly safe but not everywhere " +
 						"will be! After that, we're never going to get anywhere if we don't fix the " +
-						"Jump Drive..."));
+						"Hyperdrive..."));
+		gameRef.triggerFlashMessage("You Have New Mail",10);
 		gameRef.displayMessages();
 		gameRef.goalStatus = gameRef.goalStatus + 2;
 	}
@@ -44,6 +46,14 @@ function eventManager(gameRef)
 	{
 		document.getElementById("cmdUpgrade").style.display = "block";
 		document.getElementById("cmdBuyCredit").style.display = "block";		
+	}
+
+	if((gameRef.goalStatus & 8) == 8)
+	{
+		document.getElementById("hyperdrivetitle").innerHTML = "<strong>Hyperdrive</strong>";
+		document.getElementById("currentsystemtitle").innerHTML = "Current System :";
+		document.getElementById("drivedestinationtitle").innerHTML = "Drive Destination :";
+		document.getElementById("cmdJump").style.display = "block";
 	}
 	
 	if((gameRef.goalStatus & 16) == 16)
