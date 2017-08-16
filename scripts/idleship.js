@@ -35,27 +35,28 @@ function Game()
 	var cargoList = initialiseCargoList();
 
 	//Properties
-	this.energy = 1000; // Set energy to 1000 for testing purposes.
+	this.energy = 0; // Set energy to 1000 for testing purposes.
 	this.cursorCount = 1;
 	this.cursorCost = STARTINGCURSORCOST;
 	this.cronVariable = 0;
 	this.creditCount = 0;
 	this.status = "SPACE";
+	this.goalStatus = 0; // This will be a bitmasked number for declaring when we've received goal messages
 	
 	this.myShip = new ship(10,10,"Unknown","Cricket",1,1,2);
 	this.myShip.weapons[0] = new weapon("Laser",5,1,0,0,1,70,0,0);
 	this.myShip.weapons[1] = new weapon("Missile",10,3,1,2,1,70,0,0);
 	this.myShip.weapons[2] = new weapon("Laser",5,1,0,0,1,70,0,0);
 
-	this.shieldSystem = new shipSystem(this.myShip.shields, FRAMERATE, "divShieldsStatus", "imgShieldsBar", DISPLAYBARMAXWIDTH, false, true);
-	this.driveSystem = new shipSystem(10, FRAMERATE, "divDriveStatus", "imgDriveBar", DISPLAYBARMAXWIDTH, false, true);
-	this.dockingSystem = new shipSystem(50, FRAMERATE, "divDockingStatus", "imgDockingBar", DISPLAYBARMAXWIDTH, true, true);
+	this.shieldSystem = new shipSystem(this.myShip.shields, FRAMERATE, "divShieldsStatus", "imgShieldsBar", DISPLAYBARMAXWIDTH, false, true, true);
+	this.driveSystem = new shipSystem(10, FRAMERATE, "divDriveStatus", "imgDriveBar", DISPLAYBARMAXWIDTH, false, true, true);
+	this.dockingSystem = new shipSystem(50, FRAMERATE, "divDockingStatus", "imgDockingBar", DISPLAYBARMAXWIDTH, true, true, true);
 	this.hardPoints = [];
 	
 	this.currentSystem = new starsystem(currentSystemId, this.planetNameArray);
 	this.localPlanetMap = [];
 	
-	this.myMessages = initialiseMessagesList();
+	this.myMessages = new Array();
 	
 	
 	// UI functions
@@ -91,7 +92,7 @@ function Game()
 			for(i=0;i<this.myMessages.length;i++)
 			{
 				outStr = outStr + "<tr>\n";
-				outStr = outStr + "<td>" + this.myMessages[i].sender + " " + this.myMessages.length + "</td>\n";
+				outStr = outStr + "<td>" + this.myMessages[i].sender + "</td>\n";
 				outStr = outStr + "<td>" + this.myMessages[i].subject + "</td>\n";
 				outStr = outStr + "<td><input type=\"button\" value=\"Read\" onclick=\"Game.displayMessage(" + i + ");\"></td>\n";
 				outStr = outStr + "<tr>\n";
@@ -117,7 +118,7 @@ function Game()
 			
 			for(i=0;i < Game.myShip.weapons.length;i++)
 			{
-				this.hardPoints[i] = new shipSystem((Game.myShip.weapons[i].cooldown*10), FRAMERATE, ("divHardpointStatus" + (i+1)), ("imgHardpointBar" + (i+1)), DISPLAYBARMAXWIDTH, false, true);
+				this.hardPoints[i] = new shipSystem((Game.myShip.weapons[i].cooldown*10), FRAMERATE, ("divHardpointStatus" + (i+1)), ("imgHardpointBar" + (i+1)), DISPLAYBARMAXWIDTH, false, true, false);
 			}
 			for(j=i;j<6;j++)
 			{
@@ -131,17 +132,20 @@ function Game()
 		
 		for(i=0;i<Game.hardPoints.length;i++)
 		{
-			if(Game.hardPoints[i].enabled == true)
+			if(Game.hardPoints[i].visible)
 			{
-				document.getElementById("divHardPoint" + (i+1)).innerText = this.myShip.weapons[i].name;
-				document.getElementById("cmdHardpoint" + (i+1)).value = "HARDPOINT " + letters[i];
-				document.getElementById("cmdHardpoint" + (i+1)).onclick = new Function("Game.energy = Game.hardPoints[" + i + "].toggle(Game.energy);");
-			}
-			else
-			{
-				document.getElementById("divHardPoint" + (i+1)).innerText = "Not Installed";
-				document.getElementById("cmdHardpoint" + (i+1)).value = "<disabled>";
-				document.getElementById("cmdHardpoint" + (i+1)).onclick = "x";
+				if(Game.hardPoints[i].enabled == true)
+				{
+					document.getElementById("divHardPoint" + (i+1)).innerText = this.myShip.weapons[i].name;
+					document.getElementById("cmdHardpoint" + (i+1)).value = "HARDPOINT " + letters[i];
+					document.getElementById("cmdHardpoint" + (i+1)).onclick = new Function("Game.energy = Game.hardPoints[" + i + "].toggle(Game.energy);");
+				}
+				else
+				{
+					document.getElementById("divHardPoint" + (i+1)).innerText = "Not Installed";
+					document.getElementById("cmdHardpoint" + (i+1)).value = "<disabled>";
+					document.getElementById("cmdHardpoint" + (i+1)).onclick = "x";
+				}
 			}
 		}
 	}
@@ -161,7 +165,8 @@ function Game()
 	{
 		Game.handleFramedClick();
 		Game.handleEnemySpawns();
-		Game.handleCombat()
+		Game.handleCombat();
+		eventManager(Game);
 	} 
 
 	// Handlers for combat
@@ -470,7 +475,7 @@ function ship(hullpoints,shieldpoints,vesselname,vesselclass,
 	}
 }
 
-function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWidth, zeroIfUnpowered, enabled) {
+function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWidth, zeroIfUnpowered, enabled, visible) {
 	this.systemPointsMax = systemPoints;
 	this.systemPointsCurrent = 0;
 	this.costPerFrame = 1;
@@ -480,6 +485,7 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 	this.enabled = enabled;
 	this.barElement = barElement;
 	this.broken = true;
+	this.visible = visible;
 	
 	this.toggle = function(energy) 
 	{
@@ -492,9 +498,12 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 		{
 			if(confirm("Pay 400 to fix?"))
 			{
-				energy = energy - 400;
-				this.broken = false;
-				Game.drawLocalMap();
+				if(energy >= 400)
+				{
+					energy = energy - 400;
+					this.broken = false;
+					Game.drawLocalMap();
+				}
 			}
 		}
 		
@@ -550,13 +559,16 @@ function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWi
 		document.getElementById(barElement).width = percentFull;
 		document.getElementById(barElement).src = colorBar;
 		
-		if(!this.broken)
+		if(this.visible)
 		{
-			document.getElementById(statusElement).innerText = prettyPrintBool(this.status) + "(" + percentFull +"%)";
-		}
-		else
-		{
-			document.getElementById(statusElement).innerText = "BROKEN";
+			if(!this.broken)
+			{
+				document.getElementById(statusElement).innerText = prettyPrintBool(this.status) + "(" + percentFull +"%)";
+			}
+			else
+			{
+				document.getElementById(statusElement).innerText = "BROKEN";
+			}
 		}
 	}
 }
@@ -1062,7 +1074,6 @@ function displayLocalMap(planetNameArray, numberOfSystems, currentPlanet)
 	return localPlanets;
 }
 
-
 // **********************************************************************************
 // Initialisation Functions
 
@@ -1102,20 +1113,4 @@ function initialiseWeaponsList()
 		];
 
 	return weaponList;
-}
-
-function initialiseMessagesList() 
-{
-	// sender, subject, bodytext
-	var messageList=[
-		new message("Qwerty","Confused? I Would Be", 
-						"So hi boss! I'm QWERTY - your shipboard computer. You may be experiencing some " +
-						"confusion right now because you've just woken up from cryosleep. There's been an " +
-						"accident and it's caused some cerebral degradation - in short you've lost your " +
-						"memory. We're going to need to work together in order to get you to safety. You " +
-						"should start by cranking the reactor - the ship needs energy to get it going and " +
-						"then we'll get on to fixing what's broke!")
-	];
-	
-	return messageList;
 }

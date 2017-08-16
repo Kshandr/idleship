@@ -2,6 +2,7 @@
 	<head>
 		<title></title>
 		<script src="scripts/idleship.js"></script>		
+		<script src="scripts/eventhandler.js"></script>
 	</head>
 	<body bgcolor="#999999">
 		<table>
@@ -26,17 +27,17 @@
 				<td><strong>Systems</strong></td>
 				<td width="50" align="center">&nbsp;</td>
 				<td width="100">&nbsp;</td>
-				<td><strong>Hardpoints</strong></td>
+				<td><div id="hardpointtitle"></div></td>
 				<td width="50" align="center">&nbsp;</td>
 				<td width="100">&nbsp;</td>
-				<td><strong>System</strong></td>
+				<td><div id="systemtitle"></div></td>
 			</tr>
 			<tr>
 				<td><input type="button" value="SHIELDS" onclick="Game.energy = Game.shieldSystem.toggle(Game.energy);"></td>
 				<td width="100" align="center"><div id="divShieldsStatus">OFF</div></td>
 				<td width="100"><img id="imgShieldsBar" height="10" width="0"></td>
-				<td><input type="button" id="cmdHardpoint1" value="HARDPOINT A" onclick=""></td>
-				<td width="50" align="center"><div id="divHardpointStatus1">OFF</div></td>
+				<td><input type="button" id="cmdHardpoint1" value="HARDPOINT A" onclick="" style="display:none;"></td>
+				<td width="50" align="center"><div id="divHardpointStatus1"></div></td>
 				<td width="100"><img id="imgHardpointBar1" height="10" width="0"></td>
 				<td><div id="divHardPoint1"></div></td>
 			</tr>
@@ -44,8 +45,8 @@
 				<td><input type="button" value="DRIVE" onclick="Game.energy = Game.driveSystem.toggle(Game.energy);"></td>
 				<td width="100" align="center"><div id="divDriveStatus">OFF</div></td>
 				<td width="100"><img id="imgDriveBar" height="10" width="0"></td>
-				<td><input type="button" id="cmdHardpoint2" value="HARDPOINT B" onclick=""></td>
-				<td width="50" align="center"><div id="divHardpointStatus2">OFF</div></td>
+				<td><input type="button" id="cmdHardpoint2" value="HARDPOINT B" onclick="" style="display:none;"></td>
+				<td width="50" align="center"><div id="divHardpointStatus2"></div></td>
 				<td width="100"><img id="imgHardpointBar2" height="10" width="0"></td>
 				<td><div id="divHardPoint2"></div></td>
 			</tr>
@@ -53,8 +54,8 @@
 				<td><input type="button" value="DOCKING" onclick="Game.energy = Game.dockingSystem.toggle(Game.energy);"></td>
 				<td width="100" align="center"><div id="divDockingStatus">OFF</div></td>
 				<td width="100"><img id="imgDockingBar" height="10" width="0"></td>
-				<td><input type="button" id="cmdHardpoint3" value="HARDPOINT C" onclick=""></td>
-				<td width="50" align="center"><div id="divHardpointStatus3">OFF</div></td>
+				<td><input type="button" id="cmdHardpoint3" value="HARDPOINT C" onclick="" style="display:none;"></td>
+				<td width="50" align="center"><div id="divHardpointStatus3"></div></td>
 				<td width="100"><img id="imgHardpointBar3" height="10" width="0"></td>
 				<td><div id="divHardPoint3"></div></td>
 			</tr>
@@ -62,8 +63,8 @@
 				<td>&nbsp;</td>
 				<td width="50" align="center">&nbsp;</td>
 				<td width="100">&nbsp;</td>
-				<td><input type="button" id="cmdHardpoint4" value="HARDPOINT D" onclick=""></td>
-				<td width="50" align="center"><div id="divHardpointStatus4">OFF</div></td>
+				<td><input type="button" id="cmdHardpoint4" value="HARDPOINT D" onclick="" style="display:none;"></td>
+				<td width="50" align="center"><div id="divHardpointStatus4"></div></td>
 				<td width="100"><img id="imgHardpointBar4" height="10" width="0"></td>
 				<td><div id="divHardPoint4"></div></td>
 			</tr>
@@ -71,8 +72,8 @@
 				<td>&nbsp;</td>
 				<td width="50" align="center">&nbsp;</td>
 				<td width="100">&nbsp;</td>
-				<td><input type="button" id="cmdHardpoint5" value="HARDPOINT E" onclick=""></td>
-				<td width="50" align="center"><div id="divHardpointStatus5">OFF</div></td>
+				<td><input type="button" id="cmdHardpoint5" value="HARDPOINT E" onclick="" style="display:none;"></td>
+				<td width="50" align="center"><div id="divHardpointStatus5"></div></td>
 				<td width="100"><img id="imgHardpointBar5" height="10" width="0"></td>
 				<td><div id="divHardPoint5"></div></td>
 			</tr>
@@ -80,16 +81,17 @@
 				<td>&nbsp;</td>
 				<td width="50" align="center">&nbsp;</td>
 				<td width="100">&nbsp;</td>
-				<td><input type="button" id="cmdHardpoint6" value="HARDPOINT F" onclick=""></td>
-				<td width="50" align="center"><div id="divHardpointStatus6">OFF</div></td>
+				<td><input type="button" id="cmdHardpoint6" value="HARDPOINT F" onclick="" style="display:none;"></td>
+				<td width="50" align="center"><div id="divHardpointStatus6"></div></td>
 				<td width="100"><img id="imgHardpointBar6" height="10" width="0"></td>
 				<td><div id="divHardPoint6"></div></td>
 			</tr>
 		</table>
 		<br/>
 		<input type="button" value="CRANK REACTOR" onclick="Game.handleClick();">
-		<input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade">
-		<input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);">
+		<input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade" style="display:none;">
+		<input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);" id="cmdBuyCredit" style="display:none;">
+		<input type="button" value="BYPASS STORY" onclick="Game.goalStatus=255; Game.energy=10000;">
 		
 		<br/><br/>
 		
