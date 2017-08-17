@@ -94,7 +94,8 @@
 				<td><input type="button" value="CRANK REACTOR" onclick="Game.handleClick();"></td>
 				<td><input type="button" value="UPGRADE (cost 10)" onclick="Game.buyUpgrade();" id="cmdUpgrade" style="display:none;"></td>
 				<td><input type="button" value="MAKE CREDIT (cost 100)" onclick="Game.buyCredit(1);" id="cmdBuyCredit" style="display:none;"></td>
-				<td><input type="button" value="BYPASS STORY" onclick="Game.goalStatus=255; Game.energy=10000;"></td>
+				<td><input type="button" value="TEST/BYPASS STORY" onclick="Game.goalStatus=255; Game.energy=10000;"></td>
+				<td><input type="button" value="TEST/SPAWN BAD GUY" onclick="Game.ATTACKINSPACE=1;"></td>
 			</tr>
 		</table>
 		<br/><br/>
@@ -123,8 +124,32 @@
 				</td>
 			</tr>
 		</table>
+		<br/>
+		<table>
+			<tr>
+				<td valign="top" width="400">
+					<div id="combatlogtitle"></div>
+					<br/>
+					<textarea rows="10" cols="40" id="combatlog" style="display:none"></textarea>
+				</td>
+				<td valign="top">
+					<div id="contacttitle"></div><br/>
+					<div id="contactstats"></div>
+					<!--
+					Shields : 10 / Hull : 10<br/>
+					Crew: 2<br/>
+					Hardpoint 1: Missile I (2 remaining)<br/>
+					Hardpoint 2: Laser II
+					-->
+				</td>
+			</tr>
+		</table>
 		
 		<script>
+			var shipsList = initialiseShipsList();
+			var weaponsList = initialiseWeaponsList();
+			var cargoList = initialiseCargoList();
+			
 			Game.drawDashboard();
 			Game.cron_start();
 			Game.drawLocalMap();

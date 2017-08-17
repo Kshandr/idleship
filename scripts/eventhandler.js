@@ -69,4 +69,11 @@ function eventManager(gameRef)
 		
 		gameRef.drawWeapons();
 	}
+	
+	if((gameRef.goalStatus & 32) == 32)
+	{
+		document.getElementById("combatlogtitle").innerHTML = "<strong>Combat Log :</strong>";
+		document.getElementById("combatlog").style.display = "block";
+		document.getElementById("contacttitle").innerHTML = "<strong>Enemy Contact :</strong>";
+	}
 }

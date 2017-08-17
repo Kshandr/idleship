@@ -27,16 +27,17 @@ function Game()
 	var NUMBEROFSYSTEMS = 1500;
 	var STARTSYSTEM = 1234;
 	// var PERSECONDCHANCEOFATTACKINSPACE = .001;
-
+	var ATTACKINSPACE = 0;
+	
 	//Initialised values
 	this.planetNameArray = getManySystemNames(NUMBEROFSYSTEMS);
 	var currentSystemId = STARTSYSTEM;
 	this.driveDestinationID = STARTSYSTEM;
 	var cargoList = initialiseCargoList();
-
+	
 	//Properties
 	this.energy = 0; // Set energy to 1000 for testing purposes.
-	this.cursorCount = 1;
+	this.cursorCount = 0;
 	this.cursorCost = STARTINGCURSORCOST;
 	this.cronVariable = 0;
 	this.creditCount = 0;
@@ -48,6 +49,8 @@ function Game()
 	this.myShip.weapons[1] = new weapon("Missile",10,3,1,2,1,70,0,0);
 	this.myShip.weapons[2] = new weapon("Laser",5,1,0,0,1,70,0,0);
 
+	this.enemyShip = new ship();
+	
 	this.shieldSystem = new shipSystem(this.myShip.shields, FRAMERATE, "divShieldsStatus", "imgShieldsBar", DISPLAYBARMAXWIDTH, false, true, true);
 	this.driveSystem = new shipSystem(10, FRAMERATE, "divDriveStatus", "imgDriveBar", DISPLAYBARMAXWIDTH, false, true, true);
 	this.dockingSystem = new shipSystem(50, FRAMERATE, "divDockingStatus", "imgDockingBar", DISPLAYBARMAXWIDTH, true, true, true);
@@ -116,20 +119,6 @@ function Game()
 		}
 	}
 	
-	this.installWeapons = function() 
-	{
-			Game.hardPoints = [];
-			
-			for(i=0;i < Game.myShip.weapons.length;i++)
-			{
-				this.hardPoints[i] = new shipSystem((Game.myShip.weapons[i].cooldown*10), FRAMERATE, ("divHardpointStatus" + (i+1)), ("imgHardpointBar" + (i+1)), DISPLAYBARMAXWIDTH, false, true, false);
-			}
-			for(j=i;j<6;j++)
-			{
-				this.hardPoints[j] = new shipSystem(1, FRAMERATE, "", "", DISPLAYBARMAXWIDTH, false, false);
-			}
-	}
-	
 	this.drawWeapons = function() 
 	{
 		letters = ['A','B','C','D','E','F'];
@@ -154,6 +143,30 @@ function Game()
 		}
 	}
 	
+	this.drawEnemyShip = function()
+	{
+		var outStr = "";
+		
+		outStr = this.enemyShip.getFullShipName() + "<br/>" +
+					"Shields : " + this.enemyShip.shields + " / Hull : " + this.enemyShip.hull + "<br/>";
+					
+		document.getElementById("contactstats").innerHTML = outStr;
+	}
+
+	this.installWeapons = function() 
+	{
+			Game.hardPoints = [];
+			
+			for(i=0;i < Game.myShip.weapons.length;i++)
+			{
+				this.hardPoints[i] = new shipSystem((Game.myShip.weapons[i].cooldown*10), FRAMERATE, ("divHardpointStatus" + (i+1)), ("imgHardpointBar" + (i+1)), DISPLAYBARMAXWIDTH, false, true, false);
+			}
+			for(j=i;j<6;j++)
+			{
+				this.hardPoints[j] = new shipSystem(1, FRAMERATE, "", "", DISPLAYBARMAXWIDTH, false, false);
+			}
+	}
+		
 	// Cron functions
 	this.cron_start = function() 
 	{
@@ -209,7 +222,13 @@ function Game()
 	// Handlers for combat
 	this.handleEnemySpawns = function()
 	{
-		
+		// For now 100% chance
+		if(this.ATTACKINSPACE==1)
+		{
+			this.enemyShip = new ship().generateRandomShip();
+			this.drawEnemyShip();
+			this.ATTACKINSPACE = 0;
+		}
 	}
 	
 	this.handleCombat = function()
@@ -220,7 +239,7 @@ function Game()
 	// Click Handlers
 	this.handleFramedClick = function() 
 	{		
-		this.energy += (this.cursorCount / FRAMERATE);
+		this.energy += ((this.cursorCount + 1) / FRAMERATE);
 		
 		this.energy = this.shieldSystem.tick(this.energy);
 		this.energy = this.driveSystem.tick(this.energy);
@@ -512,6 +531,34 @@ function ship(hullpoints,shieldpoints,vesselname,vesselclass,
 	}
 }
 
+function crewmember(crewmembername,race)
+{
+	// Properties
+
+	this.crewmembername = crewmembername;
+	this.race = race;
+	this.dead = 0;
+
+	// Methods
+
+	this.generateRandomName = function()
+	{
+		var firstNames = ["Efrain","Lorenzo","Everett","Jamie",
+					"Randall","Darius","Howard",
+					"Gene","Alyssa",
+					"Dina","Elaine","Marissa",
+					"Connie","Debbie","Anna"];
+		var lastNames = ["Juarez","Moore","Nelson","Cooper",
+					"Gray","Kim","West","Olson",
+					"Stone","Knight","Lane","Vargas"];
+
+		return firstNames[Math.floor(Math.random() * 
+					firstNames.length)] + " " +
+					lastNames[Math.floor(Math.random() *
+					lastNames.length)];
+	}
+}
+	
 function shipSystem(systemPoints, frameRate, statusElement, barElement, barMaxWidth, zeroIfUnpowered, enabled, visible) {
 	this.systemPointsMax = systemPoints;
 	this.systemPointsCurrent = 0;
@@ -1114,6 +1161,21 @@ function displayLocalMap(planetNameArray, numberOfSystems, currentPlanet)
 // **********************************************************************************
 // Initialisation Functions
 
+function initialiseShipsList()
+{
+	// hullpoints,shieldpoints,vesselname,vesselclass,
+	// hardpoints,crewspaces, cargobaysize
+
+	var shipList = [
+		new ship(10,10,"Unknown","Cricket",1,1,2),
+		new ship(10,10,"Unknown","Locust",2,2,5),
+		new ship(30,30,"Unknown","Scarab",3,2,10),
+		new ship(30,30,"Unknown","Horned Beetle",5,4,20)
+	];
+
+	return shipList;
+}
+	
 function initialiseCargoList() 
 {
 	var cargoList = [{name:"Food", baseprice:10}, 
